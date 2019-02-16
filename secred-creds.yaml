@@ -1,0 +1,27 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: redis
+spec:
+  template:
+    metadata:
+      labels:
+        app: redis
+        tier: backend
+    spec:
+      volumes:
+        - name: data
+          emptyDir: {}
+        - name: secret-creds # The "my-secret-creds" secret populates this "secred-creds" volume.
+          secret:
+            secretName: my-secret-creds
+      containers:
+      - name: redis
+        image: kubernetes/redis:v1
+        ports:
+        - containerPort: 6379
+        volumeMounts:
+        - mountPath: /redis-master-data
+          name: data
+        - mountPath: /app-creds # Mount the "secred-creds" volume into the pod.
+          name: secret-creds
