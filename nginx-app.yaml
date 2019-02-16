@@ -1,0 +1,18 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: app-data-pod
+spec:
+  volumes:
+    - name: app-data-storage
+      persistentVolumeClaim:
+       claimName: app-data-claim
+  containers:
+    - name: app-data-container
+      image: nginx
+      ports:
+        - containerPort: 80
+          name: "http-server"
+      volumeMounts:
+        - mountPath: "/usr/share/nginx/html"
+          name: app-data-storage
